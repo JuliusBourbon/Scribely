@@ -1,19 +1,39 @@
 export default function LandingPage(){
     return(
-        <div className="flex items-center justify-center w-full h-screen">
-            <div className="w-1/2 flex items-center justify-center">
-                <h1 className="text-5xl w-1/2 font-bold text-[#0A1A6E]">
-                    <span className="text-white">Find Your Word!</span> <br/>
-                    lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt
-                </h1>
+        <div className="flex flex-col items-center justify-center w-full h-screen">
+            <div className="flex h-full">
+                <div className="w-1/2 flex items-center justify-center">
+                    <h1 className="text-5xl w-1/2 font-bold text-[#0A1A6E]">
+                        <span className="text-white">Find Your Word!</span> <br/>
+                        lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt
+                    </h1>
+                </div>
+                <div className="w-1/2 flex flex-col justify-center items-center gap-5">
+                    <div className="flex gap-20 text-3xl font-bold text-white my-10">
+                        <h1 className="-rotate-30 text-[#7F68FF]">Hello</h1>
+                        <h1 className="-rotate-10 text-[#0A1A6E]">Bonjour</h1>
+                        <h1 className="rotate-40 text-[#FF1000]">Hola</h1>
+                    </div>
+                    <h1 className="text-center text-5xl w-1/2 font-medium text-white">
+                        <span className="font-black">20K+</span><br /> Vocabularies
+                    </h1>
+                    <h1 className="text-center text-5xl w-1/2 font-medium text-white">
+                        <span className="font-black">10+</span><br /> Language
+                    </h1>
+                    <div className="flex gap-20 text-3xl font-bold text-white my-10">
+                        <h1 className="rotate-30 text-[#1D987C]">Namaste</h1>
+                        <h1 className="rotate-10 text-[#FF1000]">Konnichiwa</h1>
+                        <h1 className="-rotate-35 text-[#7F68FF]">Ni Hao</h1>
+                    </div>
+                </div>
             </div>
-            <div className="w-1/2 flex flex-col justify-center items-center">
-                <h1 className="text-center text-5xl w-1/2 font-medium text-white">
-                    <span className="font-black">20K+</span><br /> Vocabularies
-                </h1>
-                <h1 className="text-center text-5xl w-1/2 font-medium text-white">
-                    <span className="font-black">10+</span><br /> Language
-                </h1>
+            <div className="flex gap-60 text-2xl font-semibold max-h-full my-10 text-[#0A1A6E]">
+                <h1>Indonesia</h1>
+                <h1>English</h1>
+                <h1>Franch</h1>
+                <h1>Italy</h1>
+                <h1>Japan</h1>
+                <h1>Chinese</h1>
             </div>
         </div>
     )
