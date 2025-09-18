@@ -17,39 +17,48 @@ const wordlistId = fs.readFileSync("words_id.txt", "utf-8")
   .map(w => w.trim().toLowerCase())
   .filter(Boolean);
 
+const wordlistJp = fs.readFileSync("words_jp.txt", "utf-8")
+  .split("\n")
+  .map(w => w.trim().toLowerCase())
+  .filter(Boolean);
+
 // endpoint generate kata
 app.post("/generate", (req, res) => {
-  const { chars, maxAlphabet = 10, maxWords = 10, language = "en" } = req.body;
+    const { chars, maxAlphabet = 10, maxWords = 10, language = "en" } = req.body;
 
-  if (!chars) {
-    return res.status(400).json({ error: "Chars is required" });
-  }
-
-  // pilih wordlist sesuai language
-  let wordlist;
-  if (language === "id") {
-    wordlist = wordlistId;
-  } else {
-    wordlist = wordlistEn;
-  }
-
-  const letters = chars.toLowerCase().split("");
-
-  // filter: kata harus mengandung semua huruf input
-  const filtered = wordlist.filter(word => {
-    if (word.length > maxAlphabet) return false;
-    for (let ch of letters) {
-      if (!word.includes(ch)) return false;
+    if (!chars) {
+        return res.status(400).json({ error: "Chars is required" });
     }
+
+    // pilih wordlist sesuai language
+    let wordlist;
+    if (language === "id") {
+        wordlist = wordlistId;
+    }
+    else if (language === "jp") {
+        wordlist = wordlistJp;
+    } else {
+        wordlist = wordlistEn;
+    }
+
+    const letters = chars.toLowerCase().split("");
+
+    // filter: kata harus mengandung semua huruf input
+    const filtered = wordlist.filter(word => {
+    if (word.length > maxAlphabet) return false;
+        for (let ch of letters) {
+            if (!word.includes(ch)) return false;
+        }
     return true;
-  });
+    }
+);
 
-  // ambil sejumlah maxWords (acak)
-  const result = filtered
-    .sort(() => Math.random() - 0.5)
-    .slice(0, maxWords);
+// ambil sejumlah maxWords (acak)
+const result = filtered
+.sort(() => Math.random() - 0.5)
+.slice(0, maxWords);
 
-  res.json({ result });
+res.json({ result });
 });
 
 const PORT = process.env.PORT || 5000;
