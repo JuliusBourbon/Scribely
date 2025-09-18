@@ -4,6 +4,7 @@ export default function WordIt() {
     const [chars, setChars] = useState("");
     const [maxAlphabet, setMaxAlphabet] = useState(10);
     const [maxWords, setMaxWords] = useState(10);
+    const [language, setLanguage] = useState("en");
     const [result, setResult] = useState([]);
 
     // Randomize bg-color and text-color
@@ -18,7 +19,7 @@ export default function WordIt() {
     ];
 
     // fetch
-    const fetchWords = async (c, a, w) => {
+    const fetchWords = async (c, a, w, lang) => {
         if (!c) {
             setResult([]);
             return;
@@ -26,7 +27,7 @@ export default function WordIt() {
         const res = await fetch("http://localhost:5000/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chars: c, maxAlphabet: a, maxWords: w }),
+        body: JSON.stringify({ chars: c, maxAlphabet: a, maxWords: w, language: lang }),
         });
         const data = await res.json();
         setResult(data.result);
@@ -35,10 +36,10 @@ export default function WordIt() {
     // Hook
     useEffect(() => {
         const delay = setTimeout(() => {
-            fetchWords(chars, maxAlphabet, maxWords);
+            fetchWords(chars, maxAlphabet, maxWords, language);
             }, 400); // debounce
             return () => clearTimeout(delay);
-    }, [chars, maxAlphabet, maxWords]);
+    }, [chars, maxAlphabet, maxWords, language]);
 
     return (
         <div className="flex flex-col h-screen w-full">
@@ -47,15 +48,29 @@ export default function WordIt() {
             </div>
 
             <div className="flex flex-col justify-center mx-50 gap-10">
-                <div className="mx-50">
-                    <h1>Character</h1>
-                    <div className="relative rounded-2xl py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
-                        <input
-                            value={chars}
-                            onChange={(e) => setChars(e.target.value)}
-                            placeholder="Example: cks"
-                            className="mx-5 bg-transparent outline-none text-gray-900 w-full resize-none"
-                        />
+                <div className="mx-50 flex justify-between gap-10">
+                    <div className="w-3/4">
+                        <h1>Character</h1>
+                        <div className="relative rounded-2xl py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
+                            <input
+                                value={chars}
+                                onChange={(e) => setChars(e.target.value)}
+                                placeholder="Example: cks"
+                                className="mx-5 bg-transparent outline-none text-gray-900 w-full resize-none"
+                            />
+                        </div>
+                    </div>
+                    <div className="w-1/4">
+                        <h1>Language</h1>
+                        <select
+                            value={language}
+                            onChange={(e) => setLanguage(e.target.value)}
+                            className="relative rounded-2xl py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full"
+                        >
+                            <option value="en">🇬🇧 English</option>
+                            <option value="id">🇮🇩 Indonesia</option>
+
+                        </select>
                     </div>
                 </div>
                 <div className="mx-50">
