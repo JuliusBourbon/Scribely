@@ -2,11 +2,19 @@ export default function LandingPage(){
     return(
         <div className="flex flex-col items-center justify-center w-full h-screen">
             <div className="flex h-full">
-                <div className="w-1/2 flex items-center justify-center">
+                <div className="w-1/2 flex flex-col items-center justify-center gap-10">
                     <h1 className="text-5xl w-1/2 font-bold text-[#0A1A6E]">
                         <span className="text-white">Find Your Word!</span> <br/>
                         lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt
                     </h1>
+                    <div className="w-1/2">
+                        <div className="flex items-center justify-between text-2xl py-1 bg-[#0A1A6E] rounded-full w-1/2 text-white font-medium">
+                            <h1 className="ml-5">Start</h1>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 mr-5 font-bold">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
                 <div className="w-1/2 flex flex-col justify-center items-center gap-5">
                     <div className="flex gap-20 text-3xl font-bold text-white my-10">
