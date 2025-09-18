@@ -22,6 +22,21 @@ const wordlistJp = fs.readFileSync("words_jp.txt", "utf-8")
   .map(w => w.trim().toLowerCase())
   .filter(Boolean);
 
+const wordlistFr = fs.readFileSync("words_fr.txt", "utf-8")
+  .split("\n")
+  .map(w => w.trim().toLowerCase())
+  .filter(Boolean);
+
+const wordlistIt = fs.readFileSync("words_it.txt", "utf-8")
+  .split("\n")
+  .map(w => w.trim().toLowerCase())
+  .filter(Boolean);
+
+const wordlistDe = fs.readFileSync("words_de.txt", "utf-8")
+  .split("\n")
+  .map(w => w.trim().toLowerCase())
+  .filter(Boolean);
+
 // endpoint generate kata
 app.post("/generate", (req, res) => {
     const { chars, maxAlphabet = 10, maxWords = 10, language = "en" } = req.body;
@@ -37,7 +52,17 @@ app.post("/generate", (req, res) => {
     }
     else if (language === "jp") {
         wordlist = wordlistJp;
-    } else {
+    } 
+    else if (language === "fr") {
+        wordlist = wordlistFr;
+    } 
+    else if (language === "it") {
+        wordlist = wordlistIt;
+    } 
+    else if (language === "de") {
+        wordlist = wordlistDe;
+    } 
+    else {
         wordlist = wordlistEn;
     }
 
