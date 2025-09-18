@@ -5,7 +5,7 @@ import { Routes, Route, useLocation  } from 'react-router-dom'
 import './App.css'
 import LandingPage from './components/landingPage'
 import Navbar from './components/navbar'
-import WortIt from './components/wordit'
+import WordIt from './components/wordit'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,7 +15,7 @@ function App() {
       <Navbar/>
       <Routes>
         <Route path='/' element={<LandingPage/>}></Route>
-        <Route path='/wordit' element={<WortIt/>}></Route>
+        <Route path='/wordit' element={<WordIt/>}></Route>
       </Routes>
     </div>
   )
