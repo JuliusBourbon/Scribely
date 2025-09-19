@@ -20,7 +20,7 @@ export default function LandingPage(){
                     <div className="flex gap-20 text-3xl font-bold text-white my-10">
                         <h1 className="-rotate-30 text-[#7F68FF]">Hello</h1>
                         <h1 className="-rotate-10 text-[#0A1A6E]">Bonjour</h1>
-                        <h1 className="rotate-40 text-[#FF1000]">Hola</h1>
+                        <h1 className="rotate-40 text-[#FF1000]">Guten Morgen</h1>
                     </div>
                     <h1 className="text-center text-5xl w-1/2 font-medium text-white">
                         <span className="font-black">20K+</span><br /> Vocabularies
@@ -29,9 +29,9 @@ export default function LandingPage(){
                         <span className="font-black">10+</span><br /> Language
                     </h1>
                     <div className="flex gap-20 text-3xl font-bold text-white my-10">
-                        <h1 className="rotate-30 text-[#1D987C]">Namaste</h1>
+                        <h1 className="rotate-30 text-[#1D987C]">Selamat Pagi</h1>
                         <h1 className="rotate-10 text-[#FF1000]">Konnichiwa</h1>
-                        <h1 className="-rotate-35 text-[#7F68FF]">Ni Hao</h1>
+                        <h1 className="-rotate-35 text-[#7F68FF]">Hola</h1>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@ export default function LandingPage(){
                 <h1>Franch</h1>
                 <h1>Italy</h1>
                 <h1>Japan</h1>
-                <h1>Chinese</h1>
+                <h1>Germany</h1>
             </div>
         </div>
     )
