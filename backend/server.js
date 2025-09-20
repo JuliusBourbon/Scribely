@@ -1,13 +1,18 @@
 import express from "express";
 import cors from "cors";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url"; // Tambahan untuk ES Modules
+
+const __filename = fileURLToPath(import.meta.url); // Tambahan untuk ES Modules
+const __dirname = path.dirname(__filename);      // Tambahan untuk ES Modules
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // load wordlists
-const wordlistEn = fs.readFileSync("words_alpha.txt", "utf-8")
+const wordlistEn = fs.readFileSync("words_en.txt", "utf-8")
   .split("\n")
   .map(w => w.trim().toLowerCase())
   .filter(Boolean);
@@ -84,6 +89,35 @@ const result = filtered
 .slice(0, maxWords);
 
 res.json({ result });
+});
+
+
+app.get("/dictionary/:lang", (req, res) => {
+  const { lang } = req.params;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 101;
+  const filePath = path.join(__dirname, `words_${lang}.txt`);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: "Dictionary not found" });
+  }
+
+  const words = fs.readFileSync(filePath, "utf-8")
+    .split("\n")
+    .map((w) => w.trim())
+    .filter(Boolean);
+
+  // ambil slice sesuai page
+  const start = (page - 1) * limit;
+  const end = start + parseInt(limit);
+  const paginated = words.slice(start, end);
+
+  res.json({
+    page: parseInt(page),
+    total: words.length,
+    hasMore: end < words.length,
+    data: paginated
+  });
 });
 
 const PORT = process.env.PORT || 5000;
