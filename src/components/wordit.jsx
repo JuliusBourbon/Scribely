@@ -8,6 +8,10 @@ export default function WordIt() {
     const [maxWords, setMaxWords] = useState(10);
     const [language, setLanguage] = useState("en");
     const [result, setResult] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [none, setNone] = useState(false);
+    const [wordColors, setWordColors] = useState([]);
 
     const options = [
         { value: 'en', label: <span><img src="https://twemoji.maxcdn.com/v/latest/svg/1f1ec-1f1e7.svg" alt="UK" width="20" className="inline mr-2"/> English</span> },
@@ -31,17 +35,31 @@ export default function WordIt() {
 
     // fetch
     const fetchWords = async (c, a, w, lang) => {
+        setLoading(true); 
+        setNone(false);
+        setError(null); 
         if (!c) {
             setResult([]);
+            setNone(true);
             return;
         }
-        const res = await fetch("http://localhost:5000/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chars: c, maxAlphabet: a, maxWords: w, language: lang }),
-        });
-        const data = await res.json();
-        setResult(data.result);
+        try{
+            const res = await fetch("http://localhost:5000/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chars: c, maxAlphabet: a, maxWords: w, language: lang }),
+            });
+            const data = await res.json();
+            setResult(data.result);
+
+        } catch (error) {
+            console.error('Failed to fetch words: ', error);
+            setError("Failed to fetch Dictionary. Please Try Again.");
+            setResult([]);
+        } finally {
+            setLoading(false);
+            setNone(false);
+        }
     };
 
     // Hook
@@ -51,6 +69,16 @@ export default function WordIt() {
             }, 400); // debounce
             return () => clearTimeout(delay);
     }, [chars, maxAlphabet, maxWords, language]);
+
+    useEffect(() => {
+        if (result.length > 0) {
+            // Generate warna baru tiap kali result berubah
+            const newColors = result.map(() => {
+                return colors[Math.floor(Math.random() * colors.length)];
+            });
+            setWordColors(newColors);
+        }
+    }, [result]);
 
     return (
         <div className="flex flex-col h-screen w-full">
@@ -140,17 +168,43 @@ export default function WordIt() {
 
                 <div className="flex flex-col items-center w-full h-full gap-10">
                     <h1 className="text-3xl font-medium text-[#0A1A6E]">Result</h1>
-                    <div className="flex flex-wrap gap-5 justify-around mx-50">
-                        {result.map((word, i) => {
-                            const color = colors[Math.floor(Math.random() * colors.length)];
-
-                            return (
-                            <div key={i} className={`${color.bg} px-5 py-1 rounded-full`}>
-                                <h1 className={`text-2xl ${color.text}`}>{word}</h1>
+                        {none &&
+                            <div className="text-white text-3xl">
+                                <h1>
+                                    Enter the Character first!
+                                </h1>
                             </div>
-                            );
-                        })}
-                    </div>
+                        }
+                        {loading && !none &&
+                            <div className='flex flex-col items-center justify-center text-3xl gap-10'>
+                                <div
+                                    className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-[#0A1A6E]"
+                                    role="status">
+                                    <span
+                                        className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                                        >Loading...</span
+                                    >
+                                </div>
+                                <h1>Loading...</h1>
+                            </div>
+                        }
+                        {error && <p className="text-red-500 text-center text-3xl">{error}</p>}
+                        {!loading && !error && (
+                            <div className="flex flex-wrap gap-5 justify-around mx-50">
+                                {result.map((word, i) => {
+                                    const color = wordColors[i] || colors[0];
+                                    // const delay = setTimeout(() => {
+                                    //     color, 1000;
+                                    //     return () => clearTimeout(delay);
+                                    // }, [color])
+                                    return (
+                                    <div key={i} className={`${color.bg} px-5 py-1 rounded-full`}>
+                                        <h1 className={`text-2xl ${color.text}`}>{word}</h1>
+                                    </div>
+                                    );
+                                })}
+                            </div>
+                        )}
                 </div>
             </div>
         </div>
