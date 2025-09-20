@@ -83,7 +83,19 @@ export default function Dict() {
             
             <div className="mx-20 bg-white/30 p-5 rounded-lg text-[#0A1A6E] flex-grow">
                 <h1 className="text-3xl font-bold mb-4 text-center">{selectedLetter}</h1>
-                {loading && <p className='text-center text-3xl'>Loading...</p>}
+                {loading &&
+                    <div className='flex flex-col items-center justify-center text-3xl gap-10'>
+                        <div
+                            class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-[#0A1A6E]"
+                            role="status">
+                            <span
+                                class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                                >Loading...</span
+                            >
+                        </div>
+                        <h1>Loading...</h1>
+                    </div>
+                }
                 {error && <p className="text-red-500 text-center text-3xl">{error}</p>}
                 {!loading && !error && (
                      <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 mt-3">
