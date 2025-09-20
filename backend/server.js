@@ -91,33 +91,28 @@ const result = filtered
 res.json({ result });
 });
 
+app.get('/api/words', (req, res) => {
+    const { lang, letter } = req.query;
 
-app.get("/dictionary/:lang", (req, res) => {
-  const { lang } = req.params;
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 101;
-  const filePath = path.join(__dirname, `words_${lang}.txt`);
+    if (!lang || !letter) {
+        return res.status(400).json({ error: 'Language (lang) and letter parameters are required.' });
+    }
 
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).json({ error: "Dictionary not found" });
-  }
+    const filePath = path.join(__dirname, `words_${lang}.txt`);
 
-  const words = fs.readFileSync(filePath, "utf-8")
-    .split("\n")
-    .map((w) => w.trim())
-    .filter(Boolean);
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(404).json({ error: `Dictionary file for language '${lang}' not found.` });
+        }
 
-  // ambil slice sesuai page
-  const start = (page - 1) * limit;
-  const end = start + parseInt(limit);
-  const paginated = words.slice(start, end);
+        const words = data.split(/\s+/).filter(word => word.length > 0); // Membagi berdasarkan spasi atau baris baru
+        const filteredWords = words.filter(
+            word => word.trim().charAt(0).toUpperCase() === letter.toUpperCase()
+        );
 
-  res.json({
-    page: parseInt(page),
-    total: words.length,
-    hasMore: end < words.length,
-    data: paginated
-  });
+        res.json(filteredWords);
+    });
 });
 
 const PORT = process.env.PORT || 5000;

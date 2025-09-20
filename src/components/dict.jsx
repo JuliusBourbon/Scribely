@@ -11,37 +11,36 @@ export default function Dict() {
         { value: 'de', label: <span><img src="https://twemoji.maxcdn.com/v/latest/svg/1f1e9-1f1ea.svg" alt="DE" width="20" className="inline mr-2"/> Germany</span> },
     ];
 
-    const [language, setLanguage] = useState("en");
-    const [dictionary, setDictionary] = useState([]);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const [language, setLanguage] = useState('en');
+    const [selectedLetter, setSelectedLetter] = useState('A');
+    const [words, setWords] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
 
     useEffect(() => {
-        // reset kalau ganti bahasa
-        setDictionary([]);
-        setPage(1);
-        setHasMore(true);
-        loadWords(1, language);
-    }, [language]);
+        const fetchWords = async () => {
+            setLoading(true); 
+            setError(null); 
+            try {
+                const response = await fetch(`http://localhost:5000/api/words?lang=${language}&letter=${selectedLetter}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setWords(data);
+            } catch (error) {
+                console.error("Failed to fetch words:", error);
+                setError("Failed to fetch Dictionary. Please Try Again.");
+                setWords([]);
+            } finally {
+                setLoading(false); 
+            }
+        };
 
-    const loadWords = async (pageNum, lang) => {
-        try {
-        const res = await fetch(
-            `http://localhost:5000/dictionary/${lang}?page=${pageNum}&limit=50`
-        );
-        const data = await res.json();
-        setDictionary((prev) => [...prev, ...data.data]); // append data
-        setHasMore(data.hasMore);
-        } catch (err) {
-        console.error(err);
-        }
-    };
-
-    const handleLoadMore = () => {
-        const nextPage = page + 1;
-        setPage(nextPage);
-        loadWords(nextPage, language);
-    };
+        fetchWords();
+    }, [language, selectedLetter]);
 
     return (
         <div className="flex flex-col h-screen w-full gap-5">
@@ -52,57 +51,51 @@ export default function Dict() {
             <div className="flex justify-end mx-20">
                 <Select
                     value={options.find((opt) => opt.value === language)}
-                    onChange={(opt) => setLanguage(opt.value)}
+                    onChange={(opt) => {
+                        setLanguage(opt.value);
+                        setSelectedLetter('A'); 
+                    }}
                     options={options}
                     styles={{
-                        control: (base) => ({
-                        ...base,
-                        backgroundColor: "rgba(255, 255, 255, 0.36)",
-                        border: "1px solid #C77A00",
-                        borderRadius: "1rem",
-                        boxShadow: "inset 0 1px 3px #C77A00",
-                        }),
-                        menu: (base) => ({
-                        ...base,
-                        backgroundColor: "rgba(255, 255, 255, 0.36)",
-                        backdropFilter: "blur(6px)",
-                        }),
-                        option: (base, state) => ({
-                        ...base,
-                        backgroundColor: state.isFocused
-                            ? "rgba(199, 122, 0, 0.3)" 
-                            : "transparent",
-                        color: "#000",
-                        }),
-                        singleValue: (base) => ({
-                        ...base,
-                        color: "#000",
-                        }),
-                        placeholder: (base) => ({
-                        ...base,
-                        color: "#555",
-                        }),
+                        control: (base) => ({ ...base, backgroundColor: "rgba(255, 255, 255, 0.36)", border: "1px solid #C77A00", borderRadius: "1rem", boxShadow: "inset 0 1px 3px #C77A00", width: '200px' }),
+                        menu: (base) => ({ ...base, backgroundColor: "rgba(255, 255, 255, 0.36)", backdropFilter: "blur(6px)" }),
+                        option: (base, state) => ({ ...base, backgroundColor: state.isFocused ? "rgba(199, 122, 0, 0.3)" : "transparent", color: "#000" }),
+                        singleValue: (base) => ({ ...base, color: "#000" }),
                     }}
                 />  
             </div>
-            
-            <div className="mx-20 bg-white/30 p-5 rounded-lg text-[#0A1A6E]">
-                <h1 className="text-xl font-bold">Dictionary ({language})</h1>
-                <div className="grid grid-cols-8 gap-3 mt-3">
-                    {dictionary.map((word, idx) => (
-                    <div key={idx} className="bg-white/50 rounded-md text-center p-2">
-                        {word}
-                    </div>
-                    ))}
-                </div>
-                {hasMore && (
-                    <div className="flex justify-center mt-5">
+
+            <div className="flex flex-wrap justify-center gap-2 mx-20">
+                {alphabet.map(letter => (
                     <button
-                        onClick={handleLoadMore}
-                        className="px-4 py-2 bg-[#C77A00] text-white rounded-lg hover:bg-[#a56400]"
+                        key={letter}
+                        onClick={() => setSelectedLetter(letter)}
+                        className={`w-10 h-10 rounded-md font-bold transition-colors cursor-pointer ${
+                            selectedLetter === letter 
+                            ? 'bg-[#0A1A6E] text-white' 
+                            : 'bg-white/50 text-[#0A1A6E] hover:bg-[#C77A00]/50'
+                        }`}
                     >
-                        Load More
+                        {letter}
                     </button>
+                ))}
+            </div>
+            
+            <div className="mx-20 bg-white/30 p-5 rounded-lg text-[#0A1A6E] flex-grow">
+                <h1 className="text-3xl font-bold mb-4 text-center">{selectedLetter}</h1>
+                {loading && <p className='text-center text-3xl'>Loading...</p>}
+                {error && <p className="text-red-500 text-center text-3xl">{error}</p>}
+                {!loading && !error && (
+                     <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 mt-3">
+                        {words.length > 0 ? (
+                            words.map((word, index) => (
+                                <div key={index} className="bg-white/50 rounded-md text-center p-2 shadow font-medium">
+                                    {word}
+                                </div>
+                            ))
+                        ) : (
+                            <p>Words starting with '{selectedLetter}' is not Found.</p>
+                        )}
                     </div>
                 )}
             </div>
