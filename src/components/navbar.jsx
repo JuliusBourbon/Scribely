@@ -20,9 +20,9 @@ const Navbar = () => {
         </div>
 
         <div>
-            <button className="bg-[#001D6E] text-white font-bold px-6 py-2 rounded-full shadow">
+            <a target="_blank" href="https://trakteer.id/juliusbourbon/gift" className="bg-[#001D6E] text-white font-bold px-6 py-2 rounded-full shadow hover:border-2 ">
                 Donate!
-            </button>
+            </a>
         </div>
     </nav>
 
