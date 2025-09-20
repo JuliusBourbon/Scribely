@@ -1,1 +1,20 @@
 @import "tailwindcss";
+
+@theme {
+  @keyframes pop-up {
+    '0%': {
+      transform: 'scale(0.5)',
+      opacity: '0'
+    },
+    '100%': {
+      transform: 'scale(1)',
+      opacity: '1'
+    }
+  }
+}
+
+@layer utilities {
+  .animate-pop-up {
+    animation: pop-up 0.3s ease-out;
+  }
+}
