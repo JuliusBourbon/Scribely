@@ -15,13 +15,11 @@ const Navbar = () => {
                 <div className="flex gap-8 text-white">
                     <NavLink to='/' className={linkClassName}>Home</NavLink>
                     <div className="relative">
-                        {/* Button to toggle the dropdown */}
                         <button
                             onClick={() => setIsExpanded(!isExpanded)}
                             className="flex items-center gap-1.5 text-white hover:text-gray-300 transition-colors"
                         >
                             Word It!
-                            {/* Simple chevron icon that rotates */}
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -34,12 +32,11 @@ const Navbar = () => {
                             </svg>
                         </button>
 
-                        {/* The actual dropdown menu */}
                         <div
                             className={`absolute top-full mt-3 w-40 flex-col p-2 rounded-md bg-white/80 backdrop-blur-sm shadow-lg ${isExpanded ? 'flex' : 'hidden'}`}
                         >
-                            <NavLink to='/wordit' className="text-black px-3 py-2 rounded-md hover:bg-black/10">Word It!</NavLink>
-                            <NavLink to='/dictionary' className="text-black px-3 py-2 rounded-md hover:bg-black/10">Dictionary</NavLink>
+                            <NavLink to='/wordit' className={({ isActive }) => ` px-3 py-2 rounded-md hover:bg-black/10 ${isActive ? 'text-[#FF1000] font-bold' : 'text-black'}`}>Word It!</NavLink>
+                            <NavLink to='/wordle' className={({ isActive }) => ` px-3 py-2 rounded-md hover:bg-black/10 ${isActive ? 'text-[#FF1000] font-bold' : 'text-black'}`}>Wordle</NavLink>
                         </div>
                     </div>
                     <NavLink to='/dictionary' className={linkClassName}>Dictionary</NavLink>
