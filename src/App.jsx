@@ -7,6 +7,7 @@ import LandingPage from './components/landingPage'
 import Navbar from './components/navbar'
 import WordIt from './components/wordit'
 import Dict from './components/dict'
+import Wordle from './components/wordle'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/' element={<LandingPage/>}></Route>
         <Route path='/wordit' element={<WordIt/>}></Route>
         <Route path='/dictionary' element={<Dict/>}></Route>
+        <Route path='/wordle' element={<Wordle/>}></Route>
       </Routes>
     </div>
   )
