@@ -1,119 +1,131 @@
 import express from "express";
 import cors from "cors";
-import fs from "fs";
+import fs from "fs/promises"; 
 import path from "path";
-import { fileURLToPath } from "url"; // Tambahan untuk ES Modules
+import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url); // Tambahan untuk ES Modules
-const __dirname = path.dirname(__filename);      // Tambahan untuk ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// load wordlists
-const wordlistEn = fs.readFileSync("words_en.txt", "utf-8")
-  .split("\n")
-  .map(w => w.trim().toLowerCase())
-  .filter(Boolean);
+// Object Cache
+const wordlistsCache = {};
 
-const wordlistId = fs.readFileSync("words_id.txt", "utf-8")
-  .split("\n")
-  .map(w => w.trim().toLowerCase())
-  .filter(Boolean);
+// Object Cache Helper function
+async function getWordlist(language) {
+    if (wordlistsCache[language]) {
+        return wordlistsCache[language];
+    }
 
-const wordlistJp = fs.readFileSync("words_jp.txt", "utf-8")
-  .split("\n")
-  .map(w => w.trim().toLowerCase())
-  .filter(Boolean);
+    const filePath = path.join(__dirname, `words_${language}.txt`);
+    try {
+        const data = await fs.readFile(filePath, "utf-8");
+        const wordlist = data
+            .split(/\r?\n/)
+            .map(w => w.trim().toLowerCase())
+            .filter(Boolean);
 
-const wordlistFr = fs.readFileSync("words_fr.txt", "utf-8")
-  .split("\n")
-  .map(w => w.trim().toLowerCase())
-  .filter(Boolean);
+        wordlistsCache[language] = wordlist;
+        return wordlist;
+    } catch (error) {
+        console.error(`Could not load wordlist for language: ${language}`, error);
+        return null;
+    }
+}
 
-const wordlistIt = fs.readFileSync("words_it.txt", "utf-8")
-  .split("\n")
-  .map(w => w.trim().toLowerCase())
-  .filter(Boolean);
 
-const wordlistDe = fs.readFileSync("words_de.txt", "utf-8")
-  .split("\n")
-  .map(w => w.trim().toLowerCase())
-  .filter(Boolean);
-
-// endpoint generate kata
-app.post("/generate", (req, res) => {
+// wordit page Endpoint
+app.post("/generate", async (req, res) => {
     const { chars, maxAlphabet = 10, maxWords = 10, language = "en" } = req.body;
 
     if (!chars) {
         return res.status(400).json({ error: "Chars is required" });
     }
 
-    // pilih wordlist sesuai language
-    let wordlist;
-    if (language === "id") {
-        wordlist = wordlistId;
-    }
-    else if (language === "jp") {
-        wordlist = wordlistJp;
-    } 
-    else if (language === "fr") {
-        wordlist = wordlistFr;
-    } 
-    else if (language === "it") {
-        wordlist = wordlistIt;
-    } 
-    else if (language === "de") {
-        wordlist = wordlistDe;
-    } 
-    else {
-        wordlist = wordlistEn;
+    // Ambil data dari function helper
+    const wordlist = await getWordlist(language);
+    if (!wordlist) {
+        return res.status(404).json({ error: `Wordlist for language '${language}' not found.` });
     }
 
     const letters = chars.toLowerCase().split("");
 
-    // filter: kata harus mengandung semua huruf input
     const filtered = wordlist.filter(word => {
-    if (word.length > maxAlphabet) return false;
+        if (word.length > maxAlphabet) return false;
         for (let ch of letters) {
             if (!word.includes(ch)) return false;
         }
-    return true;
-    }
-);
+        return true;
+    });
 
-// ambil sejumlah maxWords (acak)
-const result = filtered
-.sort(() => Math.random() - 0.5)
-.slice(0, maxWords);
+    const result = filtered
+        .sort(() => Math.random() - 0.5)
+        .slice(0, maxWords);
 
-res.json({ result });
+    res.json({ result });
 });
 
-app.get('/api/words', (req, res) => {
+
+// Dictionary Endpoint
+app.get('/api/words', async (req, res) => {
     const { lang, letter } = req.query;
 
     if (!lang || !letter) {
         return res.status(400).json({ error: 'Language (lang) and letter parameters are required.' });
     }
+    
+    // Ambil data dari function helper
+    const words = await getWordlist(lang);
+    if (!words) {
+        return res.status(404).json({ error: `Dictionary file for language '${lang}' not found.` });
+    }
 
-    const filePath = path.join(__dirname, `words_${lang}.txt`);
+    const filteredWords = words.filter(
+        word => word.trim().charAt(0).toUpperCase() === letter.toUpperCase()
+    );
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(404).json({ error: `Dictionary file for language '${lang}' not found.` });
-        }
-
-        const words = data.split(/\s+/).filter(word => word.length > 0); // Membagi berdasarkan spasi atau baris baru
-        const filteredWords = words.filter(
-            word => word.trim().charAt(0).toUpperCase() === letter.toUpperCase()
-        );
-
-        res.json(filteredWords);
-    });
+    res.json(filteredWords);
 });
+
+
+// Wordle Endpoint
+app.post('/api/find-words', async (req, res) => {
+    const { maxChar = 5, maxWord = 10, language = 'en', pattern } = req.body;
+
+    if (!pattern) {
+        return res.status(400).json({ error: 'Pattern is required.' });
+    }
+
+    // Ambil data dari function helper
+    const allWords = await getWordlist(language);
+    if (!allWords) {
+        return res.status(404).json({ error: `Word list for language '${language}' not found.` });
+    }
+
+    try {
+        const regex = new RegExp(`^${pattern.replace(/_/g, '.')}$`, 'i');
+        
+        const filteredWords = allWords.filter(word => {
+            return word.length === maxChar && regex.test(word);
+        });
+
+        const results = filteredWords
+            .sort(() => Math.random() - 0.5) 
+            .slice(0, maxWord);
+
+        const finalResults = results.map(word => word.toLowerCase());
+        
+        res.json(finalResults);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An internal server error occurred during pattern matching.' });
+    }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
