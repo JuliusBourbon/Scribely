@@ -9,6 +9,7 @@ export default function Wordle() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(''); 
     const [hasSearched, setHasSearched] = useState(false);
+    const [excludes, setExcludes] = useState('');
     const inputs = useRef([]);
     const [wordColors, setWordColors] = useState([]);
 
@@ -68,6 +69,7 @@ export default function Wordle() {
                     maxWord: Number(maxWord),
                     language: language,
                     pattern: pattern,
+                    excludes: excludes,
                 }),
             });
 
@@ -130,15 +132,27 @@ export default function Wordle() {
                     </div>
                 </div>
 
-                <div className="flex justify-end">
-                    <div className="w-full md:w-1/3">
+                <div className="flex justify-between gap-20">
+                    <div className='w-full'>
+                        <h1>Excludes Character</h1>
+                        <div className="relative rounded-2xl py-2 px-3 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
+                            <input
+                                type="text"
+                                value={excludes}
+                                onChange={(e) => setExcludes(e.target.value.toLowerCase())}
+                                placeholder="Example: bhpd"
+                                className="bg-transparent outline-none text-gray-900 w-full"
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full">
                         <h1>Language</h1>
                         <Select
                             value={options.find((opt) => opt.value === language)}
                             onChange={(opt) => setLanguage(opt ? opt.value : "en")}
                             options={options}
                             styles={{
-                                control: (base) => ({ ...base, backgroundColor: "rgba(255, 255, 255, 0.36)", border: "1px solid #C77A00", borderRadius: "1rem", boxShadow: "inset 0 1px 3px #C77A00", width: '200px' }),
+                                control: (base) => ({ ...base, backgroundColor: "rgba(255, 255, 255, 0.36)", border: "1px solid #C77A00", borderRadius: "1rem", boxShadow: "inset 0 1px 3px #C77A00", width: 'w-full' }),
                                 menu: (base) => ({ ...base, backgroundColor: "rgba(255, 255, 255, 0.36)", backdropFilter: "blur(6px)" }),
                                 option: (base, state) => ({ ...base, backgroundColor: state.isFocused ? "rgba(199, 122, 0, 0.3)" : "transparent", color: "#000" }),
                                 singleValue: (base) => ({ ...base, color: "#000" }),
@@ -151,7 +165,7 @@ export default function Wordle() {
                     {Array.from({ length: maxChar }).map((_, i) => (
                         <div
                             key={i}
-                            className="relative rounded-md py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full h-24"
+                            className="relative rounded-md py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full h-36"
                         >
                             <input
                                 type="text"
@@ -192,7 +206,7 @@ export default function Wordle() {
                     {error && <p className="text-red-600 text-center text-2xl">{error}</p>}
                     
                     {!loading && !error && hasSearched && results.length === 0 && (
-                        <h1 className="text-gray-500 text-2xl">Tidak ada kata yang ditemukan.</h1>
+                        <h1 className="text-gray-500 text-2xl">Word not found.</h1>
                     )}
 
                     {!loading && !error && results.length > 0 && (
