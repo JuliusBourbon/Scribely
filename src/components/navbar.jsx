@@ -35,8 +35,8 @@ const Navbar = () => {
                         <div
                             className={`absolute top-full mt-3 w-40 flex-col p-2 rounded-md bg-white/80 backdrop-blur-sm shadow-lg ${isExpanded ? 'flex' : 'hidden'}`}
                         >
-                            <NavLink to='/wordit' className={({ isActive }) => ` px-3 py-2 rounded-md hover:bg-black/10 ${isActive ? 'text-[#FF1000] font-bold' : 'text-black'}`}>Word It!</NavLink>
-                            <NavLink to='/wordle' className={({ isActive }) => ` px-3 py-2 rounded-md hover:bg-black/10 ${isActive ? 'text-[#FF1000] font-bold' : 'text-black'}`}>Wordle</NavLink>
+                            <NavLink to='/wordit' onClick={() => setIsExpanded(!isExpanded)} className={({ isActive }) => ` px-3 py-2 rounded-md hover:bg-black/10 ${isActive ? 'text-[#FF1000] font-bold' : 'text-black'}`}>Word It!</NavLink>
+                            <NavLink to='/wordle' onClick={() => setIsExpanded(!isExpanded)} className={({ isActive }) => ` px-3 py-2 rounded-md hover:bg-black/10 ${isActive ? 'text-[#FF1000] font-bold' : 'text-black'}`}>Wordle</NavLink>
                         </div>
                     </div>
                     <NavLink to='/dictionary' className={linkClassName}>Dictionary</NavLink>
