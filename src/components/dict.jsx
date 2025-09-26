@@ -43,7 +43,7 @@ export default function Dict() {
     }, [language, selectedLetter]);
 
     return (
-        <div className="flex flex-col h-screen w-full gap-5">
+        <div className="flex flex-col w-full gap-5">
             <div className="flex text-[#0A1A6E] text-2xl my-15 font-medium items-center justify-center">
                 <h1>lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt</h1>
             </div>
@@ -88,10 +88,7 @@ export default function Dict() {
                         <div
                             class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-[#0A1A6E]"
                             role="status">
-                            <span
-                                class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-                                >Loading...</span
-                            >
+                            <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
                         </div>
                         <h1>Loading...</h1>
                     </div>
