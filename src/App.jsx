@@ -13,16 +13,20 @@ import Footer from './components/footer'
 function App() {
   return (
     <div className="w-screen h-screen flex flex-col overflow-x-hidden bg-[linear-gradient(to_bottom_right,#FBBE16,#EEA228,#FBBE16,#F4C75D)]">
-      <Navbar/>
-      <Routes>
-        <Route path='/' element={<LandingPage/>}></Route>
-        <Route path='/wordit' element={<WordIt/>}></Route>
-        <Route path='/dictionary' element={<Dict/>}></Route>
-        <Route path='/wordle' element={<Wordle/>}></Route>
-      </Routes>
-      <Footer/>
+      <Navbar />
+      
+      <main className="flex-grow">
+        <Routes>
+          <Route path='/' element={<LandingPage />} />
+          <Route path='/wordit' element={<WordIt />} />
+          <Route path='/dictionary' element={<Dict />} />
+          <Route path='/wordle' element={<Wordle />} />
+        </Routes>
+      </main>
+
+      <Footer />
     </div>
-  )
+  );
 }
 
 export default App
