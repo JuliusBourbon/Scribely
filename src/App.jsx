@@ -8,6 +8,7 @@ import Navbar from './components/navbar'
 import WordIt from './components/wordit'
 import Dict from './components/dict'
 import Wordle from './components/wordle'
+import Footer from './components/footer'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='/dictionary' element={<Dict/>}></Route>
         <Route path='/wordle' element={<Wordle/>}></Route>
       </Routes>
+      <Footer/>
     </div>
   )
 }
