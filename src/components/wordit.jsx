@@ -81,14 +81,14 @@ export default function WordIt() {
     }, [result]);
 
     return (
-        <div className="flex flex-col h-screen w-full">
-            <div className="flex text-[#0A1A6E] text-2xl my-15 font-medium items-center justify-center">
-                <h1>lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt</h1>
+        <div className="flex flex-col w-full">
+            <div className="flex text-[#0A1A6E] text-2xl mx-20 md:mx-50 text-justify md:text-center my-15 font-medium items-center justify-center">
+                <h1 className="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur aliquid ducimus praesentium eum. Impedit vitae earum nisi omnis excepturi? Assumenda eos repellendus sunt alias omnis, nisi animi accusantium similique mollitia.</h1>
             </div>
 
-            <div className="flex flex-col justify-center mx-50 gap-10">
-                <div className="mx-50 flex justify-between gap-10">
-                    <div className="w-3/4">
+            <div className="flex flex-col justify-center md:mx-50 gap-10">
+                <div className="md:mx-50 mx-20 flex md:flex-row flex-col-reverse justify-between gap-10">
+                    <div className="md:w-3/4">
                         <h1>Character</h1>
                         <div className="relative rounded-2xl py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
                             <input
@@ -99,7 +99,7 @@ export default function WordIt() {
                             />
                         </div>
                     </div>
-                    <div className="w-1/4">
+                    <div className="md:w-1/4">
                         <h1>Language</h1>
                         <Select
                             value={options.find((opt) => opt.value === language)}
@@ -137,9 +137,9 @@ export default function WordIt() {
                         />  
                     </div>
                 </div>
-                <div className="mx-50">
-                    <div className="flex justify-around">
-                        <div className="w-full mx-30">
+                <div className="md:mx-50">
+                    <div className="flex md:justify-around md:gap-0 gap-10 md:mx-0 mx-20">
+                        <div className="w-full md:mx-30">
                             <h1>Max. Alphabet</h1>
                             <div className="relative rounded-2xl py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
                                 <input
@@ -151,7 +151,7 @@ export default function WordIt() {
                                 />
                             </div>
                         </div>
-                        <div className="w-full mx-30">
+                        <div className="w-full md:mx-30">
                             <h1>Max. Words</h1>
                             <div className="relative rounded-2xl py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
                                 <input
@@ -168,43 +168,36 @@ export default function WordIt() {
 
                 <div className="flex flex-col items-center w-full h-full gap-10">
                     <h1 className="text-3xl font-medium text-[#0A1A6E]">Result</h1>
-                        {none &&
-                            <div className="text-white text-3xl">
-                                <h1>
-                                    Enter the Character first!
-                                </h1>
+                    {none &&
+                        <div className="text-white md:text-3xl text-2xl">
+                            <h1>
+                                Enter the Character first!
+                            </h1>
+                        </div>
+                    }
+                    {loading && !none &&
+                        <div className='flex flex-col items-center justify-center text-3xl gap-10'>
+                            <div
+                                className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-[#0A1A6E]"
+                                role="status">
+                                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
                             </div>
-                        }
-                        {loading && !none &&
-                            <div className='flex flex-col items-center justify-center text-3xl gap-10'>
-                                <div
-                                    className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-[#0A1A6E]"
-                                    role="status">
-                                    <span
-                                        className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-                                        >Loading...</span
-                                    >
+                            <h1>Loading...</h1>
+                        </div>
+                    }
+                    {error && <p className="text-red-500 text-center text-3xl">{error}</p>}
+                    {!loading && !error && (
+                        <div className="flex flex-wrap md:gap-5 gap-2 justify-around md:mx-50 mx-20">
+                            {result.map((word, i) => {
+                                const color = wordColors[i] || colors[0];
+                                return (
+                                <div key={i} className={`${color.bg} md:px-5 px-2 py-1 rounded-full`}>
+                                    <h1 className={`md:text-2xl text-xl ${color.text}`}>{word}</h1>
                                 </div>
-                                <h1>Loading...</h1>
-                            </div>
-                        }
-                        {error && <p className="text-red-500 text-center text-3xl">{error}</p>}
-                        {!loading && !error && (
-                            <div className="flex flex-wrap gap-5 justify-around mx-50">
-                                {result.map((word, i) => {
-                                    const color = wordColors[i] || colors[0];
-                                    // const delay = setTimeout(() => {
-                                    //     color, 1000;
-                                    //     return () => clearTimeout(delay);
-                                    // }, [color])
-                                    return (
-                                    <div key={i} className={`${color.bg} px-5 py-1 rounded-full`}>
-                                        <h1 className={`text-2xl ${color.text}`}>{word}</h1>
-                                    </div>
-                                    );
-                                })}
-                            </div>
-                        )}
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
