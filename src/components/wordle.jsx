@@ -10,12 +10,38 @@ export default function Wordle() {
     const [error, setError] = useState(''); 
     const [hasSearched, setHasSearched] = useState(false);
     const [excludes, setExcludes] = useState('');
+    const [inputValues, setInputValues] = useState(Array(5).fill(''));
     const inputs = useRef([]);
     const [wordColors, setWordColors] = useState([]);
+    const isSmallScreen = useMediaQuery('(max-width: 640px)');
+    const maxCols = isSmallScreen ? 6 : 8;
+    const columnCount = Math.min(maxChar, maxCols);
+
+    function useMediaQuery(query) {
+        const [matches, setMatches] = useState(false);
+
+        useEffect(() => {
+            const media = window.matchMedia(query);
+            if (media.matches !== matches) {
+                setMatches(media.matches);
+            }
+            const listener = () => {
+                setMatches(media.matches);
+            };
+            // Cek perubahan ukuran layar
+            media.addEventListener("change", listener);
+            return () => media.removeEventListener("change", listener);
+        }, [matches, query]);
+
+        return matches;
+    }
 
     const handleChange = (e, idx) => {
-        const value = e.target.value;
-        if (value.length === 1 && idx < inputs.current.length - 1) {
+        const newValues = [...inputValues];
+        newValues[idx] = e.target.value.toUpperCase();
+        setInputValues(newValues);
+
+        if (e.target.value.length === 1 && idx < maxChar - 1) {
             inputs.current[idx + 1].focus();
         }
     };
@@ -34,8 +60,6 @@ export default function Wordle() {
         { value: 'jp', label: <span><img src="https://twemoji.maxcdn.com/v/latest/svg/1f1ef-1f1f5.svg" alt="JP" width="20" className="inline mr-2"/> Japan</span> },
         { value: 'de', label: <span><img src="https://twemoji.maxcdn.com/v/latest/svg/1f1e9-1f1ea.svg" alt="DE" width="20" className="inline mr-2"/> Germany</span> },
     ];
-
-    // Randomize bg-color and text-color
     const colors = [
         { bg: "bg-[#0A1A6E]", text: "text-[#8D9DE8]" },
         { bg: "bg-[#FF1000]", text: "text-[#FFABA6]" },
@@ -48,18 +72,22 @@ export default function Wordle() {
 
     useEffect(() => {
         inputs.current = inputs.current.slice(0, maxChar);
+        setInputValues(currentValues => {
+            const newValues = Array(maxChar).fill('');
+            currentValues.slice(0, maxChar).forEach((val, i) => {
+                newValues[i] = val;
+            });
+            return newValues;
+        });
     }, [maxChar]);
 
     const handleSearch = async () => {
         setLoading(true);
         setError('');
-        setResults([]);
         setHasSearched(true);
 
-        // Input pattern. Jika kosong menjadi '_'
-        const pattern = inputs.current.map(input => input.value.trim() || '_').join('');
+        const pattern = inputValues.map(val => val.trim() || '_').join('');
 
-        // Fetch
         try {
             const response = await fetch('http://localhost:5000/api/find-words', {
                 method: 'POST',
@@ -72,25 +100,39 @@ export default function Wordle() {
                     excludes: excludes,
                 }),
             });
-
             const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Something went wrong');
-            }
-
+            if (!response.ok) throw new Error(data.error || 'Something went wrong');
             setResults(data);
-
         } catch (err) {
             setError(err.message);
+            setResults([]);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
+        const handler = setTimeout(() => {
+            if (inputValues.some(val => val !== '') || hasSearched) {
+                handleSearch();
+            }
+        }, 500);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [inputValues, maxChar, maxWord, language, excludes, hasSearched]);
+
+
+    useEffect(() => {
         if (results.length > 0) {
-            // Generate warna baru tiap kali result berubah
+            const newColors = results.map(() => colors[Math.floor(Math.random() * colors.length)]);
+            setWordColors(newColors);
+        }
+    }, [results]);
+
+    useEffect(() => {
+        if (results.length > 0) {
             const newColors = results.map(() => {
                 return colors[Math.floor(Math.random() * colors.length)];
             });
@@ -99,13 +141,13 @@ export default function Wordle() {
     }, [results]);
 
     return (
-        <div className="flex flex-col h-screen w-full py-10">
-            <div className="text-[#0A1A6E] text-2xl text-center mb-10 font-medium px-4">
+        <div className="flex flex-col w-full py-10">
+            <div className="text-[#0A1A6E] text-2xl mx-20 md:mx-50 text-justify md:text-center mb-10 font-medium px-4">
                 <h1>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic quasi quam ipsam, voluptatem at magnam sit quisquam, neque ratione et vitae consequuntur deserunt ex unde temporibus voluptatibus. Repellat, ipsam rem!</h1>
             </div>
 
             <div className="flex flex-col justify-center mx-auto max-w-4xl w-full gap-8 px-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 mx-20 md:mx-0 gap-6">
                     <div>
                         <h1>Max. Alphabet</h1>
                         <div className="relative rounded-2xl py-2 px-3 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
@@ -132,7 +174,7 @@ export default function Wordle() {
                     </div>
                 </div>
 
-                <div className="flex justify-between gap-20">
+                <div className="flex flex-col-reverse md:flex-row mx-20 md:mx-0 justify-between md:gap-20 gap-10">
                     <div className='w-full'>
                         <h1>Excludes Character</h1>
                         <div className="relative rounded-2xl py-2 px-3 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
@@ -161,16 +203,16 @@ export default function Wordle() {
                     </div>
                 </div>
 
-                <div className="grid gap-4 justify-items-center" style={{ gridTemplateColumns: `repeat(${maxChar}, minmax(0, 1fr))` }}>
+                <div className="grid gap-1 md:gap-4 justify-items-center mx-20 md:mx-0" style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
                     {Array.from({ length: maxChar }).map((_, i) => (
                         <div
                             key={i}
-                            className="relative rounded-md py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full h-36"
+                            className="relative rounded-md py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full h-18 md:h-36"
                         >
                             <input
                                 type="text"
                                 maxLength="1"
-                                className="w-full h-full bg-transparent outline-none text-5xl text-center uppercase"
+                                className="w-full h-3/4 md:h-full bg-transparent outline-none text-4xl md:text-5xl text-center uppercase"
                                 ref={(el) => (inputs.current[i] = el)}
                                 onChange={(e) => handleChange(e, i)}
                                 onKeyDown={(e) => handleKeyDown(e, i)}
@@ -179,17 +221,6 @@ export default function Wordle() {
                     ))}
                 </div>
                 
-                <div className="flex justify-center">
-                    <button 
-                        onClick={handleSearch} 
-                        className="bg-[#001D6E] text-white font-bold px-10 py-3 rounded-full shadow-lg hover:bg-[#0A1A6E] transition-colors"
-                        disabled={loading}
-                    >
-                        {loading ? 'Mencari...' : 'Cari Kata'}
-                    </button>
-                </div>
-
-
                 <div className="flex flex-col items-center w-full h-full gap-5 mt-5">
                     <h1 className="text-3xl font-medium text-[#0A1A6E]">Result</h1>
                     
@@ -203,6 +234,8 @@ export default function Wordle() {
                         </div>
                     )}
 
+                    
+
                     {error && <p className="text-red-600 text-center text-2xl">{error}</p>}
                     
                     {!loading && !error && hasSearched && results.length === 0 && (
@@ -210,12 +243,12 @@ export default function Wordle() {
                     )}
 
                     {!loading && !error && results.length > 0 && (
-                        <div className="flex flex-wrap gap-4 justify-center max-w-3xl">
+                        <div className="flex flex-wrap md:gap-5 gap-2 justify-around md:mx-0 mx-20">
                             {results.map((word, i) => {
                                 const color = wordColors[i] || colors[0];
                                 return(
-                                    <div key={i} className={`${color.bg} px-4 py-1 rounded-full`}>
-                                        <h1 className={`text-xl font-semibold ${color.text}`}>{word}</h1>
+                                    <div key={i} className={`${color.bg} md:px-5 px-2 py-1 rounded-full`}>
+                                        <h1 className={`md:text-2xl text-xl ${color.text}`}>{word}</h1>
                                     </div>
                                 )
                             })}
