@@ -44,11 +44,11 @@ export default function Dict() {
 
     return (
         <div className="flex flex-col w-full gap-5">
-            <div className="flex text-[#0A1A6E] text-2xl my-15 font-medium items-center justify-center">
+            <div className="flex text-[#0A1A6E] text-2xl mx-20 md:mx-50 text-justify md:text-center my-15 font-medium items-center justify-center">
                 <h1>lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt</h1>
             </div>
 
-            <div className="flex justify-end mx-20">
+            <div className="flex justify-center md:justify-end mx-20">
                 <Select
                     value={options.find((opt) => opt.value === language)}
                     onChange={(opt) => {
@@ -65,7 +65,7 @@ export default function Dict() {
                 />  
             </div>
 
-            <div className="flex flex-wrap justify-center gap-2 mx-20">
+            <div className="flex flex-wrap justify-around md:justify-center gap-2 mx-20">
                 {alphabet.map(letter => (
                     <button
                         key={letter}
@@ -95,10 +95,10 @@ export default function Dict() {
                 }
                 {error && <p className="text-red-500 text-center text-3xl">{error}</p>}
                 {!loading && !error && (
-                     <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 mt-3">
+                     <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-1 md:gap-3 mt-3">
                         {words.length > 0 ? (
                             words.map((word, index) => (
-                                <div key={index} className="bg-white/50 rounded-md text-center p-2 shadow font-medium">
+                                <div key={index} className="bg-white/50 rounded-md break-words text-center p-2 shadow font-medium text-sm">
                                     {word}
                                 </div>
                             ))
