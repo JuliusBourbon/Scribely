@@ -35,7 +35,7 @@ const Navbar = () => {
 
     return (
         <nav className="top-0 left-0 right-0 flex items-center justify-between px-6 sm:px-10 py-4 bg-transparent z-50">
-            <NavLink to="/" onClick={closeAllMenus} className="text-3xl font-extrabold text-[#FF1000] z-50">
+            <NavLink to="/" onClick={closeAllMenus} className="text-3xl font-extrabold text-[#FF1000]">
                 Scribely
             </NavLink>
 
