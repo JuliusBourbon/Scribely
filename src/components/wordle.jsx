@@ -142,7 +142,7 @@ export default function Wordle() {
 
     return (
         <div className="flex flex-col w-full py-10">
-            <div className="text-[#0A1A6E] text-2xl mx-20 md:mx-50 text-justify md:text-center mb-20 font-medium px-4">
+            <div className="text-[#0A1A6E] text-2xl mx-10 md:mx-50 text-justify md:text-center mb-20 font-medium px-4">
                 <h1>
                     Got a <span className='text-[#FF1000]'>Puzzle</span> to solve? Enter the letters you know, leave the blanks where you don’t, 
                     and Wordle will help you uncover the right match. You can also set the Maximum of Character, Result and even add an Excludes Character
@@ -150,7 +150,7 @@ export default function Wordle() {
             </div>
 
             <div className="flex flex-col justify-center mx-auto max-w-4xl w-full gap-8 px-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 mx-20 md:mx-0 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 mx-10 md:mx-0 gap-6">
                     <div>
                         <h1 className='text-center mb-1'>Max. Alphabet</h1>
                         <div className="relative rounded-2xl py-2 px-3 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
@@ -177,7 +177,7 @@ export default function Wordle() {
                     </div>
                 </div>
 
-                <div className="flex flex-col-reverse md:flex-row mx-20 md:mx-0 justify-between md:gap-20 gap-10">
+                <div className="flex flex-col-reverse md:flex-row mx-10 md:mx-0 justify-between md:gap-20 gap-10">
                     <div className='w-full'>
                         <h1 className='text-center mb-1'>Excludes Character</h1>
                         <div className="relative rounded-2xl py-2 px-3 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
@@ -206,7 +206,7 @@ export default function Wordle() {
                     </div>
                 </div>
 
-                <div className='mx-20 md:mx-0'>
+                <div className='mx-10 md:mx-0'>
                     <h1 className='text-center mb-1'>Character</h1>
                     <div className="grid gap-1 md:gap-4 justify-items-center" style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
                         {Array.from({ length: maxChar }).map((_, i) => (
@@ -249,7 +249,7 @@ export default function Wordle() {
                     )}
 
                     {!loading && !error && results.length > 0 && (
-                        <div className="flex flex-wrap md:gap-5 gap-2 justify-around md:mx-0 mx-20">
+                        <div className="flex flex-wrap md:gap-5 gap-2 justify-around md:mx-0 mx-10">
                             {results.map((word, i) => {
                                 const color = wordColors[i] || colors[0];
                                 return(

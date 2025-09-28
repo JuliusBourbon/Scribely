@@ -82,12 +82,12 @@ export default function WordIt() {
 
     return (
         <div className="flex flex-col w-full">
-            <div className="flex text-[#0A1A6E] text-2xl mx-20 lg:mx-50 mb-20 text-justify lg:text-center my-15 font-medium items-center justify-center">
+            <div className="flex text-[#0A1A6E] text-2xl mx-10 lg:mx-50 mb-20 text-justify lg:text-center my-15 font-medium items-center justify-center">
                 <h1 className="">Turn random letters into meaningful words. The results show words that contain your input. Choose from multiple languages, set the maximum characters and limit the results</h1>
             </div>
 
             <div className="flex flex-col justify-center lg:mx-50 gap-10">
-                <div className="lg:mx-50 mx-20 flex md:flex-row flex-col-reverse justify-between gap-10">
+                <div className="lg:mx-50 mx-10 flex md:flex-row flex-col-reverse justify-between gap-10">
                     <div className="lg:w-3/4 md:w-full">
                         <h1 className="text-center mb-1 md:text-left md:mb-0">Character</h1>
                         <div className="relative rounded-2xl py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
@@ -138,7 +138,7 @@ export default function WordIt() {
                     </div>
                 </div>
                 <div className="lg:mx-50">
-                    <div className="flex md:justify-around lg:gap-0 gap-10 lg:mx-0 mx-20">
+                    <div className="flex md:justify-around lg:gap-0 gap-10 lg:mx-0 mx-10">
                         <div className="w-full lg:mx-30">
                             <h1 className="text-center mb-1 md:text-left md:mb-0">Max. Alphabet</h1>
                             <div className="relative rounded-2xl py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
@@ -187,7 +187,7 @@ export default function WordIt() {
                     }
                     {error && <p className="text-red-500 text-center text-3xl">{error}</p>}
                     {!loading && !error && (
-                        <div className="flex flex-wrap md:gap-5 gap-2 justify-around md:mx-50 mx-20">
+                        <div className="flex flex-wrap md:gap-5 gap-2 justify-around md:mx-50 mx-10">
                             {result.map((word, i) => {
                                 const color = wordColors[i] || colors[0];
                                 return (
