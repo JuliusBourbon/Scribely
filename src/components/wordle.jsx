@@ -142,14 +142,17 @@ export default function Wordle() {
 
     return (
         <div className="flex flex-col w-full py-10">
-            <div className="text-[#0A1A6E] text-2xl mx-20 md:mx-50 text-justify md:text-center mb-10 font-medium px-4">
-                <h1>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic quasi quam ipsam, voluptatem at magnam sit quisquam, neque ratione et vitae consequuntur deserunt ex unde temporibus voluptatibus. Repellat, ipsam rem!</h1>
+            <div className="text-[#0A1A6E] text-2xl mx-20 md:mx-50 text-justify md:text-center mb-20 font-medium px-4">
+                <h1>
+                    Got a <span className='text-[#FF1000]'>Puzzle</span> to solve? Enter the letters you know, leave the blanks where you don’t, 
+                    and Wordle will help you uncover the right match. You can also set the Maximum of Character, Result and even add an Excludes Character
+                </h1>
             </div>
 
             <div className="flex flex-col justify-center mx-auto max-w-4xl w-full gap-8 px-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 mx-20 md:mx-0 gap-6">
                     <div>
-                        <h1>Max. Alphabet</h1>
+                        <h1 className='text-center mb-1'>Max. Alphabet</h1>
                         <div className="relative rounded-2xl py-2 px-3 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
                             <input
                                 type="number"
@@ -161,7 +164,7 @@ export default function Wordle() {
                         </div>
                     </div>
                     <div>
-                        <h1>Max. Words</h1>
+                        <h1 className='text-center mb-1'>Max. Words</h1>
                         <div className="relative rounded-2xl py-2 px-3 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
                             <input
                                 type="number"
@@ -176,7 +179,7 @@ export default function Wordle() {
 
                 <div className="flex flex-col-reverse md:flex-row mx-20 md:mx-0 justify-between md:gap-20 gap-10">
                     <div className='w-full'>
-                        <h1>Excludes Character</h1>
+                        <h1 className='text-center mb-1'>Excludes Character</h1>
                         <div className="relative rounded-2xl py-2 px-3 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full">
                             <input
                                 type="text"
@@ -188,7 +191,7 @@ export default function Wordle() {
                         </div>
                     </div>
                     <div className="w-full">
-                        <h1>Language</h1>
+                        <h1 className='text-center mb-1'>Language</h1>
                         <Select
                             value={options.find((opt) => opt.value === language)}
                             onChange={(opt) => setLanguage(opt ? opt.value : "en")}
@@ -203,22 +206,25 @@ export default function Wordle() {
                     </div>
                 </div>
 
-                <div className="grid gap-1 md:gap-4 justify-items-center mx-20 md:mx-0" style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
-                    {Array.from({ length: maxChar }).map((_, i) => (
-                        <div
-                            key={i}
-                            className="relative rounded-md py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full h-18 md:h-36"
-                        >
-                            <input
-                                type="text"
-                                maxLength="1"
-                                className="w-full h-3/4 md:h-full bg-transparent outline-none text-4xl md:text-5xl text-center uppercase"
-                                ref={(el) => (inputs.current[i] = el)}
-                                onChange={(e) => handleChange(e, i)}
-                                onKeyDown={(e) => handleKeyDown(e, i)}
-                            />
-                        </div>
-                    ))}
+                <div className='mx-20 md:mx-0'>
+                    <h1 className='text-center mb-1'>Character</h1>
+                    <div className="grid gap-1 md:gap-4 justify-items-center" style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}>
+                        {Array.from({ length: maxChar }).map((_, i) => (
+                            <div
+                                key={i}
+                                className="relative rounded-md py-2 inset-shadow-sm inset-shadow-[#C77A00] flex items-center bg-white/30 w-full h-18 md:h-36"
+                            >
+                                <input
+                                    type="text"
+                                    maxLength="1"
+                                    className="w-full h-3/4 md:h-full bg-transparent outline-none text-4xl md:text-5xl text-center uppercase"
+                                    ref={(el) => (inputs.current[i] = el)}
+                                    onChange={(e) => handleChange(e, i)}
+                                    onKeyDown={(e) => handleKeyDown(e, i)}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 
                 <div className="flex flex-col items-center w-full h-full gap-5 mt-5">
