@@ -38,7 +38,7 @@ async function getWordlist(language) {
 
 
 // wordit page Endpoint
-app.post("/generate", async (req, res) => {
+app.post("/api/generate", async (req, res) => {
     const { chars, maxAlphabet = 10, maxWords = 10, language = "en" } = req.body;
 
     if (!chars) {
