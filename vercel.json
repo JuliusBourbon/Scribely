@@ -1,5 +1,25 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
-  ]
+    "version": 2,
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@vercel/static-build",
+            "config": { "distDir": "build" }
+        },
+        {
+            "src": "api/server.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "rewrites": [
+        { "source": "/(.*)", "destination": "/" },
+        {
+            "source": "/api/(.*)",
+            "destination": "/api/server.js"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ] 
 }

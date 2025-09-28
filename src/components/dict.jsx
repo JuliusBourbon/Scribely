@@ -24,7 +24,7 @@ export default function Dict() {
             setLoading(true); 
             setError(null); 
             try {
-                const response = await fetch(`http://localhost:5000/api/words?lang=${language}&letter=${selectedLetter}`);
+                const response = await fetch(`/api/words?lang=${language}&letter=${selectedLetter}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
