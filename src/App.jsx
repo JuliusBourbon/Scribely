@@ -9,10 +9,11 @@ import WordIt from './components/wordit'
 import Dict from './components/dict'
 import Wordle from './components/wordle'
 import Footer from './components/footer'
+import ButtonTop from './components/buttonTop'
 
 function App() {
   return (
-    <div className="w-screen h-screen flex flex-col overflow-x-hidden bg-[linear-gradient(to_bottom_right,#FBBE16,#EEA228,#FBBE16,#F4C75D)]">
+    <div className="w-full min-h-screen flex flex-col overflow-x-hidden bg-[linear-gradient(to_bottom_right,#FBBE16,#EEA228,#FBBE16,#F4C75D)]">
       <Navbar />
       
       <main className="flex-grow">
@@ -25,6 +26,7 @@ function App() {
       </main>
 
       <Footer />
+      <ButtonTop/>
     </div>
   );
 }
