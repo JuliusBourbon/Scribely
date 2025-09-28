@@ -44,7 +44,7 @@ export default function WordIt() {
             return;
         }
         try{
-            const res = await fetch("http://localhost:5000/generate", {
+            const res = await fetch("/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ chars: c, maxAlphabet: a, maxWords: w, language: lang }),

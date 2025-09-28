@@ -89,7 +89,7 @@ export default function Wordle() {
         const pattern = inputValues.map(val => val.trim() || '_').join('');
 
         try {
-            const response = await fetch('http://localhost:5000/api/find-words', {
+            const response = await fetch('/api/find-words', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
