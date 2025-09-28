@@ -43,12 +43,12 @@ export default function Dict() {
     }, [language, selectedLetter]);
 
     return (
-        <div className="flex flex-col w-full gap-5">
-            <div className="flex text-[#0A1A6E] text-2xl mx-20 md:mx-50 text-justify md:text-center my-15 font-medium items-center justify-center">
-                <h1>lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt</h1>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-5">
+            <div className="flex text-[#0A1A6E] text-2xl mx-10 md:mx-50 text-justify md:text-center my-15 font-medium items-center justify-center">
+                <h1>Our dictionary is built from extensive word lists, each containing tens of thousands of entries per language. Most of these Dictionary come from open-source repositories.</h1>
             </div>
 
-            <div className="flex justify-center md:justify-end mx-20">
+            <div className="flex justify-center md:justify-end mx-10">
                 <Select
                     value={options.find((opt) => opt.value === language)}
                     onChange={(opt) => {
@@ -65,7 +65,7 @@ export default function Dict() {
                 />  
             </div>
 
-            <div className="flex flex-wrap justify-around md:justify-center gap-2 mx-20">
+            <div className="flex flex-wrap justify-around md:justify-center gap-2 mx-10">
                 {alphabet.map(letter => (
                     <button
                         key={letter}
@@ -81,7 +81,7 @@ export default function Dict() {
                 ))}
             </div>
             
-            <div className="mx-20 bg-white/30 p-5 rounded-lg text-[#0A1A6E] flex-grow">
+            <div className="mx-10 bg-white/30 p-5 rounded-lg text-[#0A1A6E] flex-grow">
                 <h1 className="text-3xl font-bold mb-4 text-center">{selectedLetter}</h1>
                 {loading &&
                     <div className='flex flex-col items-center justify-center text-3xl gap-10'>
