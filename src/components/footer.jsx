@@ -5,7 +5,7 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                     <div className="col-span-1 md:col-span-1">
                         <h2 className="text-3xl font-extrabold text-[#FF1000]">Scribely</h2>
-                        <p className="text-gray-300 mt-2 text-sm">Unravel letters, spark words, ignite learning.</p>
+                        <p className="text-gray-300 mt-2 text-sm">Unravel letters, Spark words, Encourage learning.</p>
                         <p className="mt-2">Developed by <span className="text-[#FF1000]">Julius Bourbon</span></p>
                     </div>
 
@@ -20,7 +20,7 @@ const Footer = () => {
                     </div>
 
                      <div>
-                        <h3 className="font-bold mb-3">Follow Us</h3>
+                        <h3 className="font-bold mb-3">Follow Me</h3>
                         <div className="flex gap-4">
                             <a href="https://www.instagram.com/bourbonpath" target='_blank' aria-label="Instagram">
                                 <img src="/Instagram.png" className='w-10 h-10 transition-transform hover:scale-110' alt="Instagram" />
